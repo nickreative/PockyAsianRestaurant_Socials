@@ -7,8 +7,8 @@
 <style>
   /* ---------- Root variables (desktop first) ---------- */
   :root {
-    --gap: 0.5rem;          /* 50 % less whitespace */
-    --thumb-width: 143px;   /* 30 % larger thumbnails */
+    --gap: 0.5rem;           /* thumbnail-to-thumbnail spacing  */
+    --thumb-width: 143px;    /* desktop thumbnail size          */
     --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
 
@@ -19,7 +19,7 @@
     line-height: 1.4;
     color: #222;
 
-    /* enables vertical-centering of the main wrapper */
+    /* enables vertical-centring of the main wrapper */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -28,27 +28,19 @@
   header {
     padding: 1.5rem var(--gap) 0;
   }
-  h1 {
-    margin: 0;
-    font-size: 1.6rem;
-    font-weight: 700;
-  }
-  h2 {
-    margin: 0.25rem 0 1.5rem;
-    font-size: 1rem;
-    font-weight: 500;
-    color: #777;
-  }
+  h1 { margin: 0; font-size: 1.6rem; font-weight: 700; }
+  h2 { margin: 0.25rem 0 1.5rem; font-size: 1rem; font-weight: 500; color: #777; }
 
   /* ---------- Layout ---------- */
   .wrapper {
-    flex: 1;                      /* fill remaining vertical space */
+    flex: 1;
     display: flex;
-    gap: var(--gap);
+    /* row-gap then column-gap → 400 px between grid & preview */
+    gap: var(--gap) 400px;
     padding: 0 var(--gap) var(--gap);
-    max-width: 1200px;
+    max-width: 1600px;
     margin: 0 auto;
-    align-items: center;          /* vertical centring on desktop */
+    align-items: center;     /* vertical centring on desktop */
   }
 
   /* ----- Thumbnail grid ----- */
@@ -66,13 +58,11 @@
     border: 1px solid #ddd;
     transition: opacity 0.2s;
   }
-  .grid img:hover {
-    opacity: 0.8;
-  }
+  .grid img:hover { opacity: 0.8; }
 
   /* ----- Preview area ----- */
   .preview {
-    flex: 1 1 60%;        /* 20 % narrower than before */
+    flex: 1 1 50%;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
@@ -83,24 +73,22 @@
     aspect-ratio: 4 / 5;
     object-fit: cover;
     border: 1px solid #ddd;
+    opacity: 1;                         /* start fully visible */
+    transition: opacity 0.5s ease;      /* fade duration */
   }
   .caption-body { margin: 0; }
   .caption-date { font-weight: 700; margin: 0.25rem 0 0; }
 
   /* ---------- Mobile tweaks ---------- */
   @media (max-width: 768px) {
-    :root {
-      --thumb-width: 110px;   /* revert to original size on mobile */
-      --gap: 1rem;            /* original spacing on mobile */
-    }
+    :root { --thumb-width: 110px; --gap: 1rem; }
     .wrapper {
       flex-direction: column;
-      align-items: stretch;   /* stop vertical centring on narrow screens */
+      align-items: stretch;
+      gap: var(--gap);        /* restore normal gap stacking */
     }
     .grid { margin: 0 auto; }
-    .preview {
-      flex: 1 1 auto;         /* allow full width below grid */
-    }
+    .preview { flex: 1 1 auto; }
   }
 </style>
 </head>
@@ -111,9 +99,8 @@
 </header>
 
 <main class="wrapper">
-  <!-- ------ GRID OF THUMBNAILS (swap 01-thumb.jpg … 09-thumb.jpg) ------ -->
+  <!-- ------ GRID OF THUMBNAILS (01-thumb.jpg … 09-thumb.jpg) ------ -->
   <section class="grid" id="thumbGrid">
-    <!-- Grid positions 1-9 (numbers visible only in code for your reference) -->
     <img src="01-thumb.jpg" data-index="0" alt="Post 1 thumbnail">
     <img src="02-thumb.jpg" data-index="1" alt="Post 2 thumbnail">
     <img src="03-thumb.jpg" data-index="2" alt="Post 3 thumbnail">
@@ -127,19 +114,18 @@
 
   <!-- ------ PREVIEW AREA ------ -->
   <section class="preview">
-    <img id="previewImg" src="Pocky-Social-Posts.jpg" alt="Post 1 full image">
-    <p id="captionBody" class="caption-body">Tap on an image in the grid to preview full size image and accompanying caption.</p>
-    <p id="captionDate" class="caption-date"></p>
+    <img id="previewImg" src="01-full.jpg" alt="Post 1 full image">
+    <p id="captionBody" class="caption-body">Body copy for post 1. Replace with real caption.</p>
+    <p id="captionDate" class="caption-date">01 January 2025</p>
   </section>
 </main>
 
 <script>
 /* ========== HOW TO UPDATE ==========
-   1. Place images in /images/
+   1. Keep images beside this HTML file:
       - Thumbnails : 01-thumb.jpg … 09-thumb.jpg
       - Full images: 01-full.jpg  … 09-full.jpg
-   2. Edit captions[], dates[] arrays below.
-   3. Commit & push to GitHub.
+   2. Edit captions[] and dates[] below.
 ===================================== */
 
 const captions = [
@@ -166,23 +152,6 @@ const dates = [
   "17 January 2025"
 ];
 
-/* -------- OPTIONAL: explicit filenames --------
-   If you want filenames that aren’t 01-full.jpg etc.,
-   uncomment fullImages[] and the two lines below it.
-
-const fullImages = [
-  "dish-ramen.jpg",
-  "chef-action.jpg",
-  "interior-evening.jpg",
-  "yakitori-closeup.jpg",
-  "cocktail-matcha.jpg",
-  "noodles-pull.jpg",
-  "staff-group.jpg",
-  "dessert-mochi.jpg",
-  "exterior-night.jpg"
-];
--------------------------------------------------- */
-
 const thumbGrid   = document.getElementById("thumbGrid");
 const previewImg  = document.getElementById("previewImg");
 const captionBody = document.getElementById("captionBody");
@@ -194,13 +163,14 @@ thumbGrid.addEventListener("click", e => {
 
   const idx = Number(img.dataset.index);
 
-  /* Default implicit naming */
-  previewImg.src = `${String(idx + 1).padStart(2,"0")}-full.jpg`;
+  /* ------------- Fade logic ------------- */
+  previewImg.style.opacity = 0;              // start fade-out
+  const newSrc = `${String(idx + 1).padStart(2,"0")}-full.jpg`;
 
-  /* ---- Use this instead if you uncomment fullImages[] above ----
-  previewImg.src = `images/${fullImages[idx]}`;
-  ---------------------------------------------------------------- */
+  // when the new image finishes loading, fade back in
+  previewImg.onload = () => { previewImg.style.opacity = 1; };
 
+  previewImg.src = newSrc;
   previewImg.alt = `Post ${idx + 1} full image`;
   captionBody.textContent = captions[idx] || "";
   captionDate.textContent = dates[idx]    || "";
