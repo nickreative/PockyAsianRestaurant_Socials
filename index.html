@@ -1,98 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pocky Asian Restaurant – Social Previews</title>
-  <style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pocky Asian Restaurant – Social Previews</title>
+<style>
+  /* ---------- Root variables (desktop first) ---------- */
+  :root {
+    --gap: 0.5rem;          /* 50 % less whitespace */
+    --thumb-width: 143px;   /* 30 % larger thumbnails */
+    --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  /* ---------- Global styles ---------- */
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    line-height: 1.4;
+    color: #222;
+
+    /* enables vertical-centering of the main wrapper */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  header {
+    padding: 1.5rem var(--gap) 0;
+  }
+  h1 {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+  h2 {
+    margin: 0.25rem 0 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #777;
+  }
+
+  /* ---------- Layout ---------- */
+  .wrapper {
+    flex: 1;                      /* fill remaining vertical space */
+    display: flex;
+    gap: var(--gap);
+    padding: 0 var(--gap) var(--gap);
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;          /* vertical centring on desktop */
+  }
+
+  /* ----- Thumbnail grid ----- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, var(--thumb-width));
+    grid-auto-rows: calc(var(--thumb-width) * 1.25); /* 4:5 ratio */
+    gap: var(--gap);
+  }
+  .grid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    transition: opacity 0.2s;
+  }
+  .grid img:hover {
+    opacity: 0.8;
+  }
+
+  /* ----- Preview area ----- */
+  .preview {
+    flex: 1 1 60%;        /* 20 % narrower than before */
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+  .preview img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border: 1px solid #ddd;
+  }
+  .caption-body { margin: 0; }
+  .caption-date { font-weight: 700; margin: 0.25rem 0 0; }
+
+  /* ---------- Mobile tweaks ---------- */
+  @media (max-width: 768px) {
     :root {
-      --gap: 1rem;
-      --grid-size: 100%;         /* square area; flex container handles width */
-      --thumb-width: 110px;      /* override if you want larger thumbs */
-      --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --thumb-width: 110px;   /* revert to original size on mobile */
+      --gap: 1rem;            /* original spacing on mobile */
     }
-
-    body {
-      margin: 0;
-      font-family: var(--font-sans);
-      line-height: 1.4;
-      color: #222;
-    }
-
-    header {
-      padding: 1.5rem var(--gap) 0;
-    }
-    h1 {
-      margin: 0;
-      font-size: 1.6rem;
-      font-weight: 700;
-    }
-    h2 {
-      margin: 0.25rem 0 1.5rem;
-      font-size: 1rem;
-      font-weight: 500;
-      color: #777;
-    }
-
-    /*----- Layout -----*/
     .wrapper {
-      display: flex;
-      gap: var(--gap);
-      padding: 0 var(--gap) var(--gap);
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, var(--thumb-width));
-      grid-auto-rows: calc(var(--thumb-width) * 1.25); /* 4:5 ratio (height = width*5/4) */
-      gap: var(--gap);
-    }
-    .grid img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      cursor: pointer;
-      border: 1px solid #ddd;
-      transition: opacity 0.2s;
-    }
-    .grid img:hover {
-      opacity: 0.8;
-    }
-
-    .preview {
-      flex: 1;
-      display: flex;
       flex-direction: column;
-      gap: 0.75rem;
-      min-width: 0; /* prevents flex overflow */
+      align-items: stretch;   /* stop vertical centring on narrow screens */
     }
-    .preview img {
-      max-width: 100%;
-      width: 100%;
-      aspect-ratio: 4 / 5;
-      object-fit: cover;
-      border: 1px solid #ddd;
+    .grid { margin: 0 auto; }
+    .preview {
+      flex: 1 1 auto;         /* allow full width below grid */
     }
-    .caption-body {
-      margin: 0;
-    }
-    .caption-date {
-      font-weight: 700;
-      margin: 0.25rem 0 0;
-    }
-
-    /*----- Responsive -----*/
-    @media (max-width: 768px) {
-      .wrapper {
-        flex-direction: column;
-      }
-      .grid {
-        margin: 0 auto;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
 <header>
@@ -103,114 +113,98 @@
 <main class="wrapper">
   <!-- ------ GRID OF THUMBNAILS (swap 01-thumb.jpg … 09-thumb.jpg) ------ -->
   <section class="grid" id="thumbGrid">
-    <!-- Grid 1 -->
-    <div>
-      <!-- Post 1 thumbnail -->
-      <img src="01-thumb.jpg" data-index="0" alt="Post 1 thumbnail">
-      <!-- ^^^ Replace src with your own thumbnails (01-thumb.jpg etc.) -->
-    </div>
-
-    <!-- Grid 2 -->
-    <div>
-      <img src="02-thumb.jpg" data-index="1" alt="Post 2 thumbnail">
-    </div>
-
-    <!-- Grid 3 -->
-    <div>
-      <img src="03-thumb.jpg" data-index="2" alt="Post 3 thumbnail">
-    </div>
-
-    <!-- Grid 4 -->
-    <div>
-      <img src="04-thumb.jpg" data-index="3" alt="Post 4 thumbnail">
-    </div>
-
-    <!-- Grid 5 -->
-    <div>
-      <img src="05-thumb.jpg" data-index="4" alt="Post 5 thumbnail">
-    </div>
-
-    <!-- Grid 6 -->
-    <div>
-      <img src="06-thumb.jpg" data-index="5" alt="Post 6 thumbnail">
-    </div>
-
-    <!-- Grid 7 -->
-    <div>
-      <img src="07-thumb.jpg" data-index="6" alt="Post 7 thumbnail">
-    </div>
-
-    <!-- Grid 8 -->
-    <div>
-      <img src="08-thumb.jpg" data-index="7" alt="Post 8 thumbnail">
-    </div>
-
-    <!-- Grid 9 -->
-    <div>
-      <img src="09-thumb.jpg" data-index="8" alt="Post 9 thumbnail">
-    </div>
+    <!-- Grid positions 1-9 (numbers visible only in code for your reference) -->
+    <img src="01-thumb.jpg" data-index="0" alt="Post 1 thumbnail">
+    <img src="02-thumb.jpg" data-index="1" alt="Post 2 thumbnail">
+    <img src="03-thumb.jpg" data-index="2" alt="Post 3 thumbnail">
+    <img src="04-thumb.jpg" data-index="3" alt="Post 4 thumbnail">
+    <img src="05-thumb.jpg" data-index="4" alt="Post 5 thumbnail">
+    <img src="06-thumb.jpg" data-index="5" alt="Post 6 thumbnail">
+    <img src="07-thumb.jpg" data-index="6" alt="Post 7 thumbnail">
+    <img src="08-thumb.jpg" data-index="7" alt="Post 8 thumbnail">
+    <img src="09-thumb.jpg" data-index="8" alt="Post 9 thumbnail">
   </section>
 
-  <!-- ------ PREVIEW AREA (full-size images + captions populate via JS) ------ -->
+  <!-- ------ PREVIEW AREA ------ -->
   <section class="preview">
-    <!-- Full-size preview -->
-    <img id="previewImg" src="01-full.jpg" alt="Post 1 full image">
-    <!-- Caption body copy goes here -->
+    <img id="previewImg" src="images/01-full.jpg" alt="Post 1 full image">
     <p id="captionBody" class="caption-body">Caption for post 1 – replace this text in captions[] array.</p>
-    <!-- Bold date line -->
     <p id="captionDate" class="caption-date">01 January 2025</p>
   </section>
 </main>
 
 <script>
-  /* ========== HOW TO UPDATE ==========
-     1. Drop your images in an /images/ folder.
-        - Thumbnails : 01-thumb.jpg … 09-thumb.jpg  (square or any, will crop 4:5)
-        - Full images : 01-full.jpg  … 09-full.jpg
-     2. Edit the captions[] and dates[] arrays below.
-     3. Commit & push to GitHub – done.
-  ===================================== */
+/* ========== HOW TO UPDATE ==========
+   1. Place images in /images/
+      - Thumbnails : 01-thumb.jpg … 09-thumb.jpg
+      - Full images: 01-full.jpg  … 09-full.jpg
+   2. Edit captions[], dates[] arrays below.
+   3. Commit & push to GitHub.
+===================================== */
 
-  const captions = [
-    "Test caption copy for first image",
-    "Tee hee yeah yeah",
-    "Body copy for post 3.",
-    "Body copy for post 4.",
-    "Body copy for post 5.",
-    "Body copy for post 6.",
-    "Body copy for post 7.",
-    "Body copy for post 8.",
-    "Body copy for post 9."
-  ];
+const captions = [
+  "Body copy for post 1. Replace with real caption.",
+  "Body copy for post 2.",
+  "Body copy for post 3.",
+  "Body copy for post 4.",
+  "Body copy for post 5.",
+  "Body copy for post 6.",
+  "Body copy for post 7.",
+  "Body copy for post 8.",
+  "Body copy for post 9."
+];
 
-  const dates = [
-    "01 January 2025",
-    "03 January 2025",
-    "05 January 2025",
-    "07 January 2025",
-    "09 January 2025",
-    "11 January 2025",
-    "13 January 2025",
-    "15 January 2025",
-    "17 January 2025"
-  ];
+const dates = [
+  "01 January 2025",
+  "03 January 2025",
+  "05 January 2025",
+  "07 January 2025",
+  "09 January 2025",
+  "11 January 2025",
+  "13 January 2025",
+  "15 January 2025",
+  "17 January 2025"
+];
 
-  /* -------- JS to swap preview -------- */
-  const thumbGrid = document.getElementById("thumbGrid");
-  const previewImg = document.getElementById("previewImg");
-  const captionBody = document.getElementById("captionBody");
-  const captionDate = document.getElementById("captionDate");
+/* -------- OPTIONAL: explicit filenames --------
+   If you want filenames that aren’t 01-full.jpg etc.,
+   uncomment fullImages[] and the two lines below it.
 
-  thumbGrid.addEventListener("click", e => {
-    const img = e.target.closest("img[data-index]");
-    if (!img) return;
+const fullImages = [
+  "dish-ramen.jpg",
+  "chef-action.jpg",
+  "interior-evening.jpg",
+  "yakitori-closeup.jpg",
+  "cocktail-matcha.jpg",
+  "noodles-pull.jpg",
+  "staff-group.jpg",
+  "dessert-mochi.jpg",
+  "exterior-night.jpg"
+];
+-------------------------------------------------- */
 
-    const idx = Number(img.dataset.index);
-    previewImg.src = `${String(idx + 1).padStart(2, "0")}-full.jpg`;
-    previewImg.alt = `Post ${idx + 1} full image`;
-    captionBody.textContent = captions[idx] || "";
-    captionDate.textContent = dates[idx] || "";
-  });
+const thumbGrid   = document.getElementById("thumbGrid");
+const previewImg  = document.getElementById("previewImg");
+const captionBody = document.getElementById("captionBody");
+const captionDate = document.getElementById("captionDate");
+
+thumbGrid.addEventListener("click", e => {
+  const img = e.target.closest("img[data-index]");
+  if (!img) return;
+
+  const idx = Number(img.dataset.index);
+
+  /* Default implicit naming */
+  previewImg.src = `${String(idx + 1).padStart(2,"0")}-full.jpg`;
+
+  /* ---- Use this instead if you uncomment fullImages[] above ----
+  previewImg.src = `images/${fullImages[idx]}`;
+  ---------------------------------------------------------------- */
+
+  previewImg.alt = `Post ${idx + 1} full image`;
+  captionBody.textContent = captions[idx] || "";
+  captionDate.textContent = dates[idx]    || "";
+});
 </script>
 </body>
 </html>
