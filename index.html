@@ -206,7 +206,7 @@
     if (!img) return;
 
     const idx = Number(img.dataset.index);
-    previewImg.src = `images/${String(idx + 1).padStart(2, "0")}-full.jpg`;
+    previewImg.src = `${String(idx + 1).padStart(2, "0")}-full.jpg`;
     previewImg.alt = `Post ${idx + 1} full image`;
     captionBody.textContent = captions[idx] || "";
     captionDate.textContent = dates[idx] || "";
